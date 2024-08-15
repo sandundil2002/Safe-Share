@@ -1,3 +1,7 @@
+var popup = document.getElementById("login-popup");
+var btnLogin = document.getElementById("login-btn");
+var span = document.getElementsByClassName("close-btn")[0];
+
 const TypeWriter = function (txtElement, words, wait) {
   this.txtElement = txtElement;
   this.words = words;
@@ -75,3 +79,28 @@ window.addEventListener("scroll", function (e) {
   }
   before = after;
 });
+
+btnLogin.onclick = function () {
+  popup.classList.add("show");
+  setTimeout(() => {
+     popup.style.display = "block"; 
+  }, 400);
+};
+
+span.onclick = function () {
+  popup.classList.remove("show");
+
+  setTimeout(function () {
+    popup.style.display = "none";
+  }, 400);
+};
+
+window.onclick = function (event) {
+  if (event.target == popup) {
+    popup.classList.remove("show");
+
+    setTimeout(function () {
+      popup.style.display = "none";
+    }, 400);
+  }
+};
