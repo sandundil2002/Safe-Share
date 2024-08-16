@@ -86,17 +86,17 @@ btnLogin.onclick = function () {
   loginPopup.classList.add("show");
 
   setTimeout(() => {
-     loginPopup.style.display = "block"; 
+    loginPopup.style.display = "block";
   }, 400);
 };
 
 btnsignup.onclick = function () {
   signupPopup.classList.add("show");
-  
+
   setTimeout(() => {
     signupPopup.style.display = "block";
   }, 400);
-}
+};
 
 span.onclick = function () {
   loginPopup.classList.remove("show");
@@ -119,3 +119,8 @@ window.onclick = function (event) {
     }, 400);
   }
 };
+
+document.querySelector("form").addEventListener("submit", function (event) {
+  event.preventDefault();
+  window.location.href = "/pages/homePage.html";
+});
