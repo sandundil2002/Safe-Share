@@ -1,5 +1,7 @@
-var popup = document.getElementById("login-popup");
+var loginPopup = document.getElementById("login-popup");
+var signupPopup = document.getElementById("signup-popup");
 var btnLogin = document.getElementById("login-btn");
+var btnsignup = document.getElementById("signup-btn");
 var span = document.getElementsByClassName("close-btn")[0];
 
 const TypeWriter = function (txtElement, words, wait) {
@@ -81,26 +83,39 @@ window.addEventListener("scroll", function (e) {
 });
 
 btnLogin.onclick = function () {
-  popup.classList.add("show");
+  loginPopup.classList.add("show");
+
   setTimeout(() => {
-     popup.style.display = "block"; 
+     loginPopup.style.display = "block"; 
   }, 400);
 };
 
+btnsignup.onclick = function () {
+  signupPopup.classList.add("show");
+  
+  setTimeout(() => {
+    signupPopup.style.display = "block";
+  }, 400);
+}
+
 span.onclick = function () {
-  popup.classList.remove("show");
+  loginPopup.classList.remove("show");
+  signupPopup.classList.remove("show");
 
   setTimeout(function () {
-    popup.style.display = "none";
+    loginPopup.style.display = "none";
+    signupPopup.style.display = "none";
   }, 400);
 };
 
 window.onclick = function (event) {
-  if (event.target == popup) {
-    popup.classList.remove("show");
+  if (event.target == loginPopup) {
+    loginPopup.classList.remove("show");
+    signupPopup.classList.remove("show");
 
     setTimeout(function () {
-      popup.style.display = "none";
+      loginPopup.style.display = "none";
+      signupPopup.style.display = "none";
     }, 400);
   }
 };
