@@ -7,14 +7,13 @@
     font-weight: 600;
 }
 
-.cover-photo {
-    height: 320px;
-    width: 100%;
-    object-fit: cover;
+.profile-photo {
+    width: 12%;
+    border: 5px solid;
 }
 
 @media screen and (max-width: 767px) {
-    .cover-photo{
-        height: 200px;
+    .profile-photo {
+        width: 20%;
     }
 }
