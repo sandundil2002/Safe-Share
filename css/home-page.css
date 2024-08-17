@@ -6,3 +6,15 @@
     font-family: "Poppins", sans-serif;
     font-weight: 600;
 }
+
+.cover-photo {
+    height: 320px;
+    width: 100%;
+    object-fit: cover;
+}
+
+@media screen and (max-width: 767px) {
+    .cover-photo{
+        height: 200px;
+    }
+}
