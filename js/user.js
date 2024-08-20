@@ -27,18 +27,59 @@ $(document).ready(function () {
     var email = $("#signEmail").val();
     var password = $("#signPassword").val();
 
-    const uuid = crypto.randomUUID();
+    var users = {
+      email: email,
+      password: password,
+    };
 
-    set(ref(db, "users/" + uuid), {
-      Email: email,
-      Password: password,
-    })
-      .then(() => {
-        alert("Saved");
+    if (checkValidation(users)) {
+      const uuid = crypto.randomUUID();
+      set(ref(db, "users/" + uuid), {
+        Email: email,
+        Password: password,
       })
-      .catch((error) => {
-        alert("Error");
-        console.log(error);
-      });
+        .then(() => {
+          swal({
+            title: "Success",
+            text: "User Registration successfully",
+            icon: "success",
+            buttons: "Ok",
+          })
+        })
+        .catch((error) => {
+          alert("Error");
+          console.log(error);
+        });
+    }
   });
 });
+
+function checkValidation(users) {
+  const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const passwordPattern = /^.{4,}$/; 
+
+  const isEmailValid = emailPattern.test(users.email);
+  const isPasswordValid = passwordPattern.test(users.password);
+
+  if (!isEmailValid) {
+    swal({
+      title: "Warning!",
+      text: "Please Input A Valid Email Address!",
+      icon: "error",
+      button: "Try Again!",
+    });
+    return false;
+  }
+
+  if (!isPasswordValid) {
+    swal({
+      title: "Warning!",
+      text: "Please Input A Valid Password!",
+      icon: "error",
+      button: "Try Again!",
+    });
+    return false;
+  }
+
+  return true;
+}
