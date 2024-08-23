@@ -91,15 +91,16 @@ $(document).ready(function () {
 
           if (userData.Email === username && userData.Password === password) {
             userFound = true;
+            localStorage.setItem("username", username);
             swal({
               title: "Login Successful!",
-              text: "Redirecting to home page...",
+              text: "Redirecting to dashboard...",
               icon: "success",
               buttons: false,
               timer: 2000,
-            }).then(() => {
+            }).then(() => {            
               window.location.href = "/pages/homePage.html";
-            });
+            });  
           }
         });
 
@@ -149,6 +150,5 @@ function checkValidation(users) {
     });
     return false;
   }
-
   return true;
 }

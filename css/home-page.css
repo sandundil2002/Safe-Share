@@ -1,3 +1,7 @@
+body{
+    text-transform: capitalize;
+}
+
 .navbar {
     background-color: rgb(202, 198, 198);
 }
