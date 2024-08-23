@@ -119,8 +119,3 @@ window.onclick = function (event) {
     }, 400);
   }
 };
-
-document.querySelector("form").addEventListener("submit", function (event) {
-  event.preventDefault();
-  window.location.href = "/pages/homePage.html";
-});
