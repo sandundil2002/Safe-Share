@@ -1,121 +1,126 @@
-var loginPopup = document.getElementById("login-popup");
-var signupPopup = document.getElementById("signup-popup");
-var btnLogin = document.getElementById("login-btn");
-var btnsignup = document.getElementById("signup-btn");
-var span = document.getElementsByClassName("close-btn")[0];
+$(document).ready(function () {
+  var $loginPopup = $("#login-popup");
+  var $signupPopup = $("#signup-popup");
+  var $btnLogin = $("#login-btn");
+  var $btnSignup = $("#signup-btn");
+  var $closeBtn = $(".close-btn");
 
-const TypeWriter = function (txtElement, words, wait) {
-  this.txtElement = txtElement;
-  this.words = words;
-  this.txt = "";
-  this.wordIndex = 0;
-  this.wait = parseInt(wait, 10);
-  this.type();
-  this.isDeleting = false;
-};
-
-TypeWriter.prototype.type = function () {
-  const current = this.wordIndex % this.words.length;
-  const fulltxt = this.words[current];
-
-  if (this.isDeleting) {
-    this.txt = fulltxt.substring(0, this.txt.length - 1);
-  } else {
-    this.txt = fulltxt.substring(0, this.txt.length + 1);
-  }
-
-  this.txtElement.innerHTML = '<span class = "txt">' + this.txt + "</span>";
-
-  let typeSpeed = 200;
-  if (this.isDeleting) {
-    typeSpeed /= 2;
-  }
-
-  if (!this.isDeleting && this.txt === fulltxt) {
-    typeSpeed = this.wait;
-    this.isDeleting = true;
-  } else if (this.isDeleting && this.txt === "") {
-    this.isDeleting = false;
-    this.wordIndex++;
-  }
-
-  setTimeout(() => this.type(), typeSpeed);
-};
-
-window.onload = function () {
-  const txtElement = document.querySelector(".role");
-  const words = JSON.parse(txtElement.getAttribute("data-words"));
-  const wait = txtElement.getAttribute("data-wait");
-  new TypeWriter(txtElement, words, wait);
-
-  const txtElementFooter = document.querySelector(".footer");
-  const wordsFooter = JSON.parse(txtElementFooter.getAttribute("data-words"));
-  const waitFooter = txtElementFooter.getAttribute("data-wait");
-  new TypeWriter(txtElementFooter, wordsFooter, waitFooter);
-};
-
-window.addEventListener("scroll", function (e) {
-  let after = this.scrollY;
-  if (after != 0) {
-    nav.style.boxShadow = "0px 5px 15px black";
-  } else {
-    nav.style.boxShadow = "0px 0 0px black";
-  }
-
-  if (before < after) {
-    if (pos > navHeight) {
-      pos -= after - before;
-      if (pos < navHeight) {
-        pos = navHeight;
-      }
-      nav.style.top = pos + "px";
+  class TypeWriter {
+    constructor(txtElement, words, wait) {
+      this.txtElement = txtElement;
+      this.words = words;
+      this.txt = "";
+      this.wordIndex = 0;
+      this.wait = parseInt(wait, 10);
+      this.type();
+      this.isDeleting = false;
     }
-  } else {
-    if (pos < 0) {
-      pos += before - after;
-      if (pos > 0) {
-        pos = 0;
+
+    type() {
+      const current = this.wordIndex % this.words.length;
+      const fulltxt = this.words[current];
+
+      if (this.isDeleting) {
+        this.txt = fulltxt.substring(0, this.txt.length - 1);
+      } else {
+        this.txt = fulltxt.substring(0, this.txt.length + 1);
       }
-      nav.style.top = pos + "px";
+
+      this.txtElement.html('<span class="txt">' + this.txt + "</span>");
+
+      let typeSpeed = 200;
+      if (this.isDeleting) {
+        typeSpeed /= 2;
+      }
+
+      if (!this.isDeleting && this.txt === fulltxt) {
+        typeSpeed = this.wait;
+        this.isDeleting = true;
+      } else if (this.isDeleting && this.txt === "") {
+        this.isDeleting = false;
+        this.wordIndex++;
+      }
+
+      setTimeout(() => this.type(), typeSpeed);
     }
   }
-  before = after;
-});
 
-btnLogin.onclick = function () {
-  loginPopup.classList.add("show");
+  $(window).on("load", function () {
+    const $txtElement = $(".role");
+    const words = JSON.parse($txtElement.attr("data-words"));
+    const wait = $txtElement.attr("data-wait");
+    new TypeWriter($txtElement, words, wait);
+  });
 
-  setTimeout(() => {
-    loginPopup.style.display = "block";
-  }, 400);
-};
+  var before = 0;
+  var pos = 0;
+  const navHeight = $("nav").outerHeight();
+  const $nav = $("nav");
 
-btnsignup.onclick = function () {
-  signupPopup.classList.add("show");
+  $(window).on("scroll", function () {
+    let after = $(this).scrollTop();
 
-  setTimeout(() => {
-    signupPopup.style.display = "block";
-  }, 400);
-};
+    if (after !== 0) {
+      $nav.css("box-shadow", "0px 5px 15px black");
+    } else {
+      $nav.css("box-shadow", "0px 0 0px black");
+    }
 
-span.onclick = function () {
-  loginPopup.classList.remove("show");
-  signupPopup.classList.remove("show");
+    if (before < after) {
+      if (pos > navHeight) {
+        pos -= after - before;
+        if (pos < navHeight) {
+          pos = navHeight;
+        }
+        $nav.css("top", pos + "px");
+      }
+    } else {
+      if (pos < 0) {
+        pos += before - after;
+        if (pos > 0) {
+          pos = 0;
+        }
+        $nav.css("top", pos + "px");
+      }
+    }
+    before = after;
+  });
 
-  setTimeout(function () {
-    loginPopup.style.display = "none";
-    signupPopup.style.display = "none";
-  }, 400);
-};
+  $btnLogin.on("click", function () {
+    $loginPopup.addClass("show");
 
-window.onclick = function (event) {
-  if (event.target == loginPopup) {
-    loginPopup.classList.remove("show");
-    signupPopup.classList.remove("show");
+    setTimeout(() => {
+      $loginPopup.show();
+    }, 400);
+  });
+
+  $btnSignup.on("click", function () {
+    $signupPopup.addClass("show");
+
+    setTimeout(() => {
+      $signupPopup.show();
+    }, 400);
+  });
+
+  $closeBtn.on("click", function () {
+    $loginPopup.removeClass("show");
+    $signupPopup.removeClass("show");
 
     setTimeout(function () {
-      loginPopup.style.display = "none";
-      signupPopup.style.display = "none";
+      $loginPopup.hide();
+      $signupPopup.hide();
     }, 400);
-  }
-};
+  });
+
+  $(window).on("click", function (event) {
+    if (event.target === $loginPopup[0] || event.target === $signupPopup[0]) {
+      $loginPopup.removeClass("show");
+      $signupPopup.removeClass("show");
+
+      setTimeout(function () {
+        $loginPopup.hide();
+        $signupPopup.hide();
+      }, 400);
+    }
+  });
+});

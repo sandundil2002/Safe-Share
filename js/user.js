@@ -18,13 +18,10 @@ $(document).ready(function () {
     appId: "1:631799901190:web:a5ddfb5d20a35944e5a787",
   };
 
-  // Initialize Firebase
   const app = initializeApp(firebaseConfig);
 
-  // Set database variable
   const db = getDatabase();
 
-  // User signup
   $("#signBtn").click(function () {
     var email = $("#signEmail").val();
     var password = $("#signPassword").val();
@@ -55,7 +52,6 @@ $(document).ready(function () {
               button: "OK",
             });
           } else {
-            // Proceed with signup if email doesn't exist
             const uuid = crypto.randomUUID();
             set(ref(db, "users/" + uuid), {
               Email: email,
@@ -81,7 +77,6 @@ $(document).ready(function () {
     }
   });
 
-  //user login
   $("#loginBtn").click(function () {
     var username = $("#loginUsername").val();
     var password = $("#loginPassword").val();
