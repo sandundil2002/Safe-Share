@@ -20,6 +20,10 @@ body {
     margin-top: -2%;
 }
 
+.details input {
+    max-width: 30%;
+}
+
 @media screen and (max-width: 767px) {
     .profile-photo {
         width: 25%;
@@ -27,5 +31,10 @@ body {
 
     .details {
         margin-top: -3%;
+    }
+
+    .details input {
+        max-width: 50%;
+        font-size: 12px;
     }
 }
