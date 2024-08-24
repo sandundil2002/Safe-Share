@@ -20,8 +20,8 @@ body {
     margin-top: -2%;
 }
 
-.details input {
-    max-width: 30%;
+.upload{
+    width: 60%;
 }
 
 @media screen and (max-width: 767px) {
@@ -31,10 +31,5 @@ body {
 
     .details {
         margin-top: -3%;
-    }
-
-    .details input {
-        max-width: 50%;
-        font-size: 12px;
     }
 }

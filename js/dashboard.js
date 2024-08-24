@@ -53,6 +53,9 @@ $(document).ready(function () {
       return;
     }
 
+    $("#progressContainer").show();
+    $("#progressBar").css("width", "0%").attr("aria-valuenow", 0);
+
     try {
       const originalName = file.name;
       const extension = originalName.substring(
@@ -79,6 +82,10 @@ $(document).ready(function () {
           const progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           console.log(`Upload is ${progress.toFixed(2)}% done`);
+
+          $("#progressBar")
+            .css("width", `${progress}%`)
+            .attr("aria-valuenow", progress);
         },
         (error) => {
           console.error("Upload failed:", error);
@@ -88,10 +95,11 @@ $(document).ready(function () {
             icon: "error",
             buttons: "OK",
           });
+
+          $("#progressContainer").hide();
         },
         async () => {
           const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-          console.log("url" + downloadURL);
 
           await set(
             ref(db, `users/${storedUsername}/uploads/${uniqueSuffix}`),
@@ -109,6 +117,8 @@ $(document).ready(function () {
             icon: "success",
             buttons: "OK",
           });
+
+          $("#progressContainer").hide();
         }
       );
     } catch (error) {
@@ -119,6 +129,8 @@ $(document).ready(function () {
         icon: "error",
         buttons: "OK",
       });
+
+      $("#progressContainer").hide();
     }
   });
 
