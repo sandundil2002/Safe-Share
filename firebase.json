@@ -1,8 +1,19 @@
 [
   {
-    "origin": ["http://127.0.0.1:5500"],
-    "method": ["GET", "POST", "DELETE", "PUT", "OPTIONS"],
+    "origin": [
+      "http://127.0.0.1:5500"
+    ],
+    "method": [
+      "GET",
+      "POST",
+      "DELETE",
+      "PUT",
+      "OPTIONS"
+    ],
     "maxAgeSeconds": 3600,
-    "responseHeader": ["Content-Type", "Authorization"]
+    "responseHeader": [
+      "Content-Type",
+      "Authorization"
+    ]
   }
 ]

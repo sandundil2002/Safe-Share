@@ -1,4 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+
 import {
   getDatabase,
   ref,
@@ -62,7 +63,10 @@ $(document).ready(function () {
                   title: "Success",
                   text: "User registered successfully!",
                   icon: "success",
-                  buttons: "Ok",
+                  buttons: false,
+                  timer: 2000,
+                }).then(() => {
+                  window.location.href = "/pages/homePage.html";
                 });
               })
               .catch((error) => {
@@ -98,9 +102,9 @@ $(document).ready(function () {
               icon: "success",
               buttons: false,
               timer: 2000,
-            }).then(() => {            
+            }).then(() => {
               window.location.href = "/pages/homePage.html";
-            });  
+            });
           }
         });
 
