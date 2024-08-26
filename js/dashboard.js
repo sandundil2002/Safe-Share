@@ -5,6 +5,7 @@ import {
   ref,
   get,
   set,
+  remove,
   child,
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
 
@@ -13,6 +14,7 @@ import {
   ref as storageRef,
   uploadBytesResumable,
   getDownloadURL,
+  deleteObject,
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-storage.js";
 
 $(document).ready(function () {
@@ -27,11 +29,10 @@ $(document).ready(function () {
   };
 
   const app = initializeApp(firebaseConfig);
-
   const db = getDatabase();
   const storage = getStorage();
-
   const storedUsername = localStorage.getItem("username");
+  const sanitizedUsername = storedUsername.replace(/[@.]/g, "_");
   const parts = storedUsername.split("@");
 
   $("#profileUsername").html(parts[0]);
@@ -39,6 +40,37 @@ $(document).ready(function () {
   const firstLetter = parts[0].charAt(0).toUpperCase();
   const imgSrc = `/img/${firstLetter}.png`;
   $("#profilePic").attr("src", imgSrc);
+
+  async function loadImages() {
+    const imagesRef = ref(db, `users/${sanitizedUsername}/uploads`);
+    const snapshot = await get(imagesRef);
+
+    if (snapshot.exists()) {
+      const uploads = snapshot.val();
+      Object.keys(uploads).forEach((key) => {
+        const { url, fileName } = uploads[key];
+
+        const card = `
+                    <div class="card" style="width: 18rem;" id="card-${key}">
+                        <img src="${url}" class="card-img-top" alt="${fileName}">
+                        <div class="card-body d-flex justify-content-between">
+                            <p class="card-text text-center">
+                                <a class="btn btn-sm btn-outline-primary fw-bold" href="#" role="button" onclick="copyLink('${url}')">Copy Link</a>
+                            </p>
+                            <p class="card-text text-center">
+                                <a class="btn btn-sm btn-outline-danger fw-bold" href="#" role="button" onclick="deleteImage('${key}', '${fileName}', '${sanitizedUsername}')">Delete</a>
+                            </p>
+                        </div>
+                    </div>`;
+
+        $("#cardContainer").append(card);
+      });
+    } else {
+      console.log("No images found for this user.");
+    }
+  }
+
+  loadImages();
 
   $("#fileInput").change(async function () {
     const file = this.files[0];
@@ -52,9 +84,6 @@ $(document).ready(function () {
       });
       return;
     }
-
-    // Sanitize storedUsername by replacing invalid characters
-    const sanitizedUsername = storedUsername.replace(/[@.]/g, "_");
 
     $("#progressContainer").show();
     $("#progressBar").css("width", "0%").attr("aria-valuenow", 0);
@@ -100,21 +129,21 @@ $(document).ready(function () {
         async () => {
           const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
 
-          // Create a new card dynamically
           const card = `
-                <div class="card" style="width: 18rem;">
-                    <img src="${downloadURL}" class="card-img-top" alt="${finalFileName}">
-                    <div class="card-body">
-                        <p class="card-text text-center">
-                            <a class="btn btn-sm btn-outline-primary fw-bold" href="#" role="button" onclick="copyLink('${downloadURL}')">Copy Link</a>
-                        </p>
-                    </div>
-                </div>`;
+                        <div class="card" style="width: 18rem;" id="card-${uniqueSuffix}">
+                            <img src="${downloadURL}" class="card-img-top" alt="${finalFileName}">
+                            <div class="card-body">
+                                <p class="card-text text-center d-flex justify-content-between">
+                                    <a class="btn btn-sm btn-outline-primary fw-bold" href="#" role="button" onclick="copyLink('${downloadURL}')">Copy Link</a>
+                                </p>
+                                <p class="card-text text-center">
+                                    <a class="btn btn-sm btn-outline-danger fw-bold" href="#" role="button" onclick="deleteImage('${uniqueSuffix}', '${finalFileName}', '${sanitizedUsername}')">Delete</a>
+                                </p>
+                            </div>
+                        </div>`;
 
-          // Append the new card to the cardContainer
           $("#cardContainer").append(card);
 
-          // Copy Link function
           window.copyLink = function (url) {
             navigator.clipboard
               .writeText(url)
@@ -166,4 +195,45 @@ $(document).ready(function () {
   $("#signoutBtn").click(function () {
     window.location.href = "/index.html";
   });
+
+  window.deleteImage = async function (
+    uniqueSuffix,
+    fileName,
+    sanitizedUsername
+  ) {
+    try {
+      const willDelete = await swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover this image!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      });
+
+      if (willDelete) {
+        const fileRef = storageRef(
+          storage,
+          `uploads/${sanitizedUsername}/${fileName}`
+        );
+        await deleteObject(fileRef);
+
+        const dbRef = ref(
+          db,
+          `users/${sanitizedUsername}/uploads/${uniqueSuffix}`
+        );
+        await remove(dbRef);
+
+        $(`#card-${uniqueSuffix}`).remove();
+
+        swal("Deleted!", "Your image has been deleted.", "success");
+      }
+    } catch (error) {
+      console.error("Error deleting image:", error);
+      swal(
+        "Error!",
+        "An unexpected error occurred while deleting the image.",
+        "error"
+      );
+    }
+  };
 });
