@@ -6,7 +6,6 @@ import {
   get,
   set,
   remove,
-  child,
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
 
 import {
@@ -50,7 +49,10 @@ $(document).ready(function () {
       Object.keys(uploads).forEach((key) => {
         const { url, fileName } = uploads[key];
 
-        const card = `
+        if (url && url.trim() !== "") {
+          console.log(url);
+
+          const card = `
                     <div class="card" style="width: 18rem;" id="card-${key}">
                         <img src="${url}" class="card-img-top" alt="${fileName}">
                         <div class="card-body d-flex justify-content-between">
@@ -63,12 +65,29 @@ $(document).ready(function () {
                         </div>
                     </div>`;
 
-        $("#cardContainer").append(card);
+          $("#cardContainer").append(card);
+        }
       });
     } else {
       console.log("No images found for this user.");
     }
   }
+
+  window.copyLink = function (url) {
+    navigator.clipboard
+      .writeText(url)
+      .then(() => {
+        swal({
+          title: "Link Copied!",
+          text: "The image URL has been copied to the clipboard.",
+          icon: "success",
+          buttons: "OK",
+        });
+      })
+      .catch((error) => {
+        console.error("Failed to copy the link:", error);
+      });
+  };
 
   loadImages();
 
@@ -132,7 +151,7 @@ $(document).ready(function () {
           const card = `
                         <div class="card" style="width: 18rem;" id="card-${uniqueSuffix}">
                             <img src="${downloadURL}" class="card-img-top" alt="${finalFileName}">
-                            <div class="card-body">
+                            <div class="card-body d-flex justify-content-between">
                                 <p class="card-text text-center d-flex justify-content-between">
                                     <a class="btn btn-sm btn-outline-primary fw-bold" href="#" role="button" onclick="copyLink('${downloadURL}')">Copy Link</a>
                                 </p>
