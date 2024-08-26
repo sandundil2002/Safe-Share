@@ -68,10 +68,15 @@ $(document).ready(function () {
         .replace(/[^\w\-]/g, "");
 
       const timestamp = new Date().toISOString().replace(/[-:.]/g, "");
-      const uniqueSuffix = Math.random().toString(36).substring(2, 8);
+      let uniqueSuffix = Math.random().toString(36).substring(2, 8);
+
+      uniqueSuffix = uniqueSuffix.replace(/[\.\#\$\[\]]/g, "_");
+
       const finalFileName = `${sanitizedFileName}_${timestamp}_${uniqueSuffix}.${extension}`;
 
-      const storagePath = `uploads/${storedUsername}/${finalFileName}`;
+      const sanitizedUsername = storedUsername.replace(/[\.\#\$\[\]]/g, "_");
+
+      const storagePath = `uploads/${sanitizedUsername}/${finalFileName}`;
       const storageReference = storageRef(storage, storagePath);
 
       const uploadTask = uploadBytesResumable(storageReference, file);
@@ -99,26 +104,38 @@ $(document).ready(function () {
           $("#progressContainer").hide();
         },
         async () => {
-          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+          try {
+            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
 
-          await set(
-            ref(db, `users/${storedUsername}/uploads/${uniqueSuffix}`),
-            {
-              originalName: originalName,
-              fileName: finalFileName,
-              url: downloadURL,
-              uploadedAt: new Date().toISOString(),
-            }
-          );
+            await set(
+              ref(db, `users/${sanitizedUsername}/uploads/${uniqueSuffix}`),
+              {
+                originalName: originalName,
+                fileName: finalFileName,
+                url: downloadURL,
+                uploadedAt: new Date().toISOString(),
+              }
+            );
 
-          swal({
-            title: "Upload Successful!",
-            text: "Your file has been uploaded.",
-            icon: "success",
-            buttons: "OK",
-          });
+            swal({
+              title: "Upload Successful!",
+              text: "Your file has been uploaded.",
+              icon: "success",
+              buttons: "OK",
+            });
 
-          $("#progressContainer").hide();
+            $("#progressContainer").hide();
+          } catch (error) {
+            console.error("Error saving file info:", error);
+            swal({
+              title: "Error!",
+              text: "Failed to save file information.",
+              icon: "error",
+              buttons: "OK",
+            });
+
+            $("#progressContainer").hide();
+          }
         }
       );
     } catch (error) {
