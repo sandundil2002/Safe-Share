@@ -53,6 +53,9 @@ $(document).ready(function () {
       return;
     }
 
+    // Sanitize storedUsername by replacing invalid characters
+    const sanitizedUsername = storedUsername.replace(/[@.]/g, "_");
+
     $("#progressContainer").show();
     $("#progressBar").css("width", "0%").attr("aria-valuenow", 0);
 
@@ -61,21 +64,14 @@ $(document).ready(function () {
       const extension = originalName.substring(
         originalName.lastIndexOf(".") + 1
       );
-
       const sanitizedFileName = originalName
         .substring(0, originalName.lastIndexOf("."))
         .replace(/\s+/g, "_")
         .replace(/[^\w\-]/g, "");
 
       const timestamp = new Date().toISOString().replace(/[-:.]/g, "");
-      let uniqueSuffix = Math.random().toString(36).substring(2, 8);
-
-      uniqueSuffix = uniqueSuffix.replace(/[\.\#\$\[\]]/g, "_");
-
+      const uniqueSuffix = Math.random().toString(36).substring(2, 8);
       const finalFileName = `${sanitizedFileName}_${timestamp}_${uniqueSuffix}.${extension}`;
-
-      const sanitizedUsername = storedUsername.replace(/[\.\#\$\[\]]/g, "_");
-
       const storagePath = `uploads/${sanitizedUsername}/${finalFileName}`;
       const storageReference = storageRef(storage, storagePath);
 
@@ -87,7 +83,6 @@ $(document).ready(function () {
           const progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           console.log(`Upload is ${progress.toFixed(2)}% done`);
-
           $("#progressBar")
             .css("width", `${progress}%`)
             .attr("aria-valuenow", progress);
@@ -100,42 +95,60 @@ $(document).ready(function () {
             icon: "error",
             buttons: "OK",
           });
-
           $("#progressContainer").hide();
         },
         async () => {
-          try {
-            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
 
-            await set(
-              ref(db, `users/${sanitizedUsername}/uploads/${uniqueSuffix}`),
-              {
-                originalName: originalName,
-                fileName: finalFileName,
-                url: downloadURL,
-                uploadedAt: new Date().toISOString(),
-              }
-            );
+          // Create a new card dynamically
+          const card = `
+                <div class="card" style="width: 18rem;">
+                    <img src="${downloadURL}" class="card-img-top" alt="${finalFileName}">
+                    <div class="card-body">
+                        <p class="card-text text-center">
+                            <a class="btn btn-sm btn-outline-primary fw-bold" href="#" role="button" onclick="copyLink('${downloadURL}')">Copy Link</a>
+                        </p>
+                    </div>
+                </div>`;
 
-            swal({
-              title: "Upload Successful!",
-              text: "Your file has been uploaded.",
-              icon: "success",
-              buttons: "OK",
-            });
+          // Append the new card to the cardContainer
+          $("#cardContainer").append(card);
 
-            $("#progressContainer").hide();
-          } catch (error) {
-            console.error("Error saving file info:", error);
-            swal({
-              title: "Error!",
-              text: "Failed to save file information.",
-              icon: "error",
-              buttons: "OK",
-            });
+          // Copy Link function
+          window.copyLink = function (url) {
+            navigator.clipboard
+              .writeText(url)
+              .then(() => {
+                swal({
+                  title: "Link Copied!",
+                  text: "The image URL has been copied to the clipboard.",
+                  icon: "success",
+                  buttons: "OK",
+                });
+              })
+              .catch((error) => {
+                console.error("Failed to copy the link:", error);
+              });
+          };
 
-            $("#progressContainer").hide();
-          }
+          await set(
+            ref(db, `users/${sanitizedUsername}/uploads/${uniqueSuffix}`),
+            {
+              originalName: originalName,
+              fileName: finalFileName,
+              url: downloadURL,
+              uploadedAt: new Date().toISOString(),
+            }
+          );
+
+          swal({
+            title: "Upload Successful!",
+            text: "Your file has been uploaded.",
+            icon: "success",
+            buttons: "OK",
+          });
+
+          $("#progressContainer").hide();
         }
       );
     } catch (error) {
@@ -146,7 +159,6 @@ $(document).ready(function () {
         icon: "error",
         buttons: "OK",
       });
-
       $("#progressContainer").hide();
     }
   });
