@@ -37,7 +37,7 @@ $(document).ready(function () {
   $("#profileUsername").html(parts[0]);
 
   const firstLetter = parts[0].charAt(0).toUpperCase();
-  const imgSrc = `/img/${firstLetter}.png`;
+  const imgSrc = `../img/${firstLetter}.png`;
   $("#profilePic").attr("src", imgSrc);
 
   async function loadImages() {
@@ -212,7 +212,7 @@ $(document).ready(function () {
   });
 
   $("#signoutBtn").click(function () {
-    window.location.href = "/index.html";
+    window.location.href = "../index.html";
   });
 
   window.deleteImage = async function (
