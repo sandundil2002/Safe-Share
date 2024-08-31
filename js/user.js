@@ -66,7 +66,7 @@ $(document).ready(function () {
                   buttons: false,
                   timer: 2000,
                 }).then(() => {
-                  window.location.href = "/pages/homePage.html";
+                  window.location.href = "./pages/homePage.html";
                 });
               })
               .catch((error) => {
@@ -103,7 +103,7 @@ $(document).ready(function () {
               buttons: false,
               timer: 2000,
             }).then(() => {
-              window.location.href = "/pages/homePage.html";
+              window.location.href = "./pages/homePage.html";
             });
           }
         });
