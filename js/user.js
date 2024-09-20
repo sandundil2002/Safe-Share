@@ -10,13 +10,13 @@ import {
 
 $(document).ready(function () {
   const firebaseConfig = {
-    apiKey: "AIzaSyCDhvqoZJi8hUfBOtgRZP8Z7zklJ60cdrk",
-    authDomain: "safe-share-d3d50.firebaseapp.com",
-    databaseURL: "https://safe-share-d3d50-default-rtdb.firebaseio.com",
-    projectId: "safe-share-d3d50",
-    storageBucket: "safe-share-d3d50.appspot.com",
-    messagingSenderId: "631799901190",
-    appId: "1:631799901190:web:a5ddfb5d20a35944e5a787",
+    apiKey: "AIzaSyBqUdVW9UDaAnQgSXBwISURBcElaNvlcls",
+    authDomain: "safe-share-efd01.firebaseapp.com",
+    databaseUrl: "https://safe-share-efd01-default-rtdb.firebaseio.com/",
+    projectId: "safe-share-efd01",
+    storageBucket: "safe-share-efd01.appspot.com",
+    messagingSenderId: "1076658012223",
+    appId: "1:1076658012223:web:a1f72b2f17e7552788f88a",
   };
 
   const app = initializeApp(firebaseConfig);
