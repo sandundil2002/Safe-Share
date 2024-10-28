@@ -18,12 +18,12 @@ import {
 
 $(document).ready(function () {
   const firebaseConfig = {
-    apiKey: "AIzaSyBqUdVW9UDaAnQgSXBwISURBcElaNvlcls",
-    authDomain: "safe-share-efd01.firebaseapp.com",
-    projectId: "safe-share-efd01",
-    storageBucket: "safe-share-efd01.appspot.com",
-    messagingSenderId: "1076658012223",
-    appId: "1:1076658012223:web:a1f72b2f17e7552788f88a",
+    apiKey: "AIzaSyCyQDB3KtVkI79lycxafZ7Yoscd58vPVes",
+    authDomain: "safe-share-5023a.firebaseapp.com",
+    projectId: "safe-share-5023a",
+    storageBucket: "safe-share-5023a.appspot.com",
+    messagingSenderId: "186819144689",
+    appId: "1:186819144689:web:69911e5942c5f66cf57250",
   };
 
   const app = initializeApp(firebaseConfig);
