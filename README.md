@@ -1,6 +1,6 @@
 <a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=50&pause=1000&center=true&vCenter=true&width=835&height=70&lines=Safe+Share" alt="Typing SVG" /></a>
 
-<p align="center"><video autoplay controls muted src="/img/safe-share intro.mp4"></video></p>
+<p align="center"><img src="/img/safe-share-1.png" alt="project-image"></p>
 
 <p id="description">Safe Share is a secure and user-friendly file storage and sharing platform leveraging Firebase services for real-time database management authentication and file storage. The platform allows users to upload store view share and manage their files ensuring secure access control and smooth file handling via a simple interface.</p>
 
